@@ -3,28 +3,32 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Client {
+public class ClientThread {
 
 	private Socket s;
 	
 	private PrintWriter pw;
 	private Scanner in;
 	
-	public Client(String address, int port) {
+	private String clientAddress;
+	
+	public ClientThread(Socket s) {
+		this.s = s;
 		try {
-			s = new Socket(address, port);
 			pw = new PrintWriter(s.getOutputStream(), true);
 			in = new Scanner(s.getInputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(getMessage());
+		clientAddress = s.getInetAddress().toString();
 	}
 	
-	public String getMessage() {
-		String message = in.nextLine();
-		System.out.println(message);
-		return message;
+	public void sendMessage(String message) {
+		pw.println(message);
+	}
+	
+	public String getClientAddress() {
+		return clientAddress;
 	}
 	
 }
