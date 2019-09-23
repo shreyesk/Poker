@@ -3,7 +3,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class ClientThread {
+public class ClientThread implements Runnable{
 
 	private Socket s;
 	
@@ -21,14 +21,41 @@ public class ClientThread {
 			e.printStackTrace();
 		}
 		clientAddress = s.getInetAddress().toString();
+		Thread t = new Thread(this);
+		t.start();
 	}
 	
 	public void sendMessage(String message) {
 		pw.println(message);
 	}
 	
+	public boolean hasMessage() {
+		return in.hasNext();
+	}
+	
+	public String getMessage() {
+		return in.nextLine();
+	}
+	
+	public void displayMessage() {
+		System.out.println(clientAddress + ": " + getMessage());
+		System.out.print("Response: ");
+		Scanner scan = new Scanner(System.in);
+		String response = scan.nextLine();
+		pw.println(response);
+	}
+	
 	public String getClientAddress() {
 		return clientAddress;
+	}
+	
+	@Override
+	public void run() {
+		while(true) {
+			if(this.hasMessage()) {
+				displayMessage();
+			}
+		}
 	}
 	
 }

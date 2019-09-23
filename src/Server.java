@@ -14,17 +14,20 @@ public class Server implements Runnable{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Server started on port " + port +  ".");
 	}
 
 	@Override
 	public void run() {
-		try {
-			Socket s = ss.accept();
-			ClientThread ct = new ClientThread(s);
-			System.out.println("Connected.");
-			ct.sendMessage("hello " + ct.getClientAddress());
-		} catch (IOException e) {
-			e.printStackTrace();
+		while(true) {
+			try {
+				Socket s = ss.accept();
+				ClientThread ct = new ClientThread(s);
+				System.out.println("Connected to " + ct.getClientAddress() + ".");
+				ct.sendMessage("Hello " + ct.getClientAddress() + ".");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

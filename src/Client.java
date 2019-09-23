@@ -3,7 +3,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Client {
+public class Client implements Runnable{
 
 	private Socket s;
 	
@@ -18,13 +18,38 @@ public class Client {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(getMessage());
+		System.out.println("Connected to server.");
+		Thread t = new Thread(this);
+		t.start();
+	}
+	
+	public void sendMessage(String message) {
+		pw.println(message);
+	}
+	
+	public boolean hasMessage() {
+		return in.hasNext();
 	}
 	
 	public String getMessage() {
-		String message = in.nextLine();
-		System.out.println(message);
-		return message;
+		return in.nextLine();
+	}
+	
+	public void displayMessage() {
+		System.out.println(getMessage());
+		System.out.print("Response: ");
+		Scanner scan = new Scanner(System.in);
+		String response = scan.nextLine();
+		pw.println(response);
+	}
+	
+	@Override
+	public void run() {
+		while(true) {
+			if(this.hasMessage()) {
+				displayMessage();
+			}
+		}
 	}
 	
 }
