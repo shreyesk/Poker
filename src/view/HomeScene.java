@@ -14,7 +14,9 @@ public class HomeScene extends Scene {
 	private BorderPane bp;
 	
 	private Text prompt;
+	private Text portPrompt;
 	private TextField input;
+	private TextField portInput;
 	private Button connect;
 
 	public HomeScene(BorderPane borderPane, int i, int j, String color) {
@@ -24,7 +26,9 @@ public class HomeScene extends Scene {
 		bp.setStyle("-fx-background-color: '" + color + "';");
 		
 		prompt = new Text("Enter address of server: ");
+		portPrompt = new Text("Enter port: ");
 		input = new TextField();
+		portInput = new TextField();
 		connect = new Button("Connect");
 		
 		VBox comps = new VBox();
@@ -35,16 +39,23 @@ public class HomeScene extends Scene {
 		serverInfo.setAlignment(Pos.CENTER);
 		serverInfo.setSpacing(10);
 		
+		HBox portInfo = new HBox();
+		portInfo.setAlignment(Pos.CENTER);
+		portInfo.setSpacing(10);
+		
 		serverInfo.getChildren().add(prompt);
 		serverInfo.getChildren().add(input);
+		portInfo.getChildren().add(portPrompt);
+		portInfo.getChildren().add(portInput);
 		comps.getChildren().add(serverInfo);
+		comps.getChildren().add(portInfo);
 		comps.getChildren().add(connect);
 		
 		bp.setCenter(comps);
 	}
 	
 	public String getInput() {
-		return input.getText();
+		return input.getText() + " " + portInput.getText();
 	}
 	
 	public Button getConnect() {

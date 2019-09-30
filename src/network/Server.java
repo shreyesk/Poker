@@ -5,15 +5,19 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import game.Game;
+
 public class Server implements Runnable {
 
 	private ServerSocket ss;
-
-	public ArrayList<ClientThread> clientThreads;
+	private ArrayList<ClientThread> clientThreads;
 	
-	private static int portNumber = 1234; // default port number
+	private boolean threadRun;
+	
+	private Game g;
 	
 	public Server(int port) {
+		threadRun = true;
 		try {
 			ss = new ServerSocket(port);
 			Thread t = new Thread(this);
@@ -26,21 +30,48 @@ public class Server implements Runnable {
 		clientThreads = new ArrayList<>();
 	}
 	
-	public int size() {
-		return clientThreads.size();
+	public void createGame(int size) {
+		g = new Game(clientThreads.size());
 	}
 	
-	public static int getPortNumber() {
-		return portNumber;
+	public Game getGame() {
+		return g;
+	}
+	
+	public ArrayList<ClientThread> getClientThreads() {
+		return clientThreads;
+	}
+	
+	public boolean getThreadRun() {
+		return threadRun;
+	}
+	
+	public void stopThread() {
+		threadRun = false;
+	}
+	
+	public boolean ready() {
+		for(ClientThread c : clientThreads) {
+			if(!c.getCurrentMessage().equals("ready")) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public int size() {
+		return clientThreads.size();
 	}
 
 	@Override
 	public void run() {
-		while(true) {
+		while(threadRun) {
 			try {
 				Socket s = ss.accept();
 				ClientThread ct = new ClientThread(s);
 				clientThreads.add(ct);
+				Thread t = new Thread(ct);
+				t.start();
 				System.out.println("Connected to " + ct.getClientAddress() + ".");
 				ct.sendMessage("Hello " + ct.getClientAddress() + ".");
 			} catch (IOException e) {
@@ -50,14 +81,28 @@ public class Server implements Runnable {
 	}
 	
 	public static void main(String[] args) {
-		new Server(portNumber);
 		Scanner scan = new Scanner(System.in);
+		System.out.println("Enter port number for server.");
+		int portNumber = scan.nextInt();
+		scan.nextLine();
+		Server s = new Server(portNumber);
 		System.out.println("Type 'start' to begin the game.");
 		String start = scan.nextLine();
 		while(!start.equals("start")) {
 			System.out.println("Invalid input.");
 			start = scan.nextLine();
 		}
+		s.stopThread();
+		s.createGame(s.size());
+		while(!s.ready()) {
+			System.out.println("All players are not ready.");
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		System.out.println("All players ready.");
 		scan.close();
 		System.out.println();
 	}

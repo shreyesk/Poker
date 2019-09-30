@@ -4,15 +4,18 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class MessageSender {
+public class MessageSender implements Runnable {
 
 	private Socket s;
 	
 	private PrintWriter pw;
 	private Scanner in;
 	
+	private String currentMessage;
+	
 	public MessageSender(Socket s) {
 		this.s = s;
+		currentMessage = "";
 		initializeInAndOut();
 	}
 	
@@ -22,6 +25,7 @@ public class MessageSender {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		currentMessage = "";
 		initializeInAndOut();
 	}
 	
@@ -34,6 +38,14 @@ public class MessageSender {
 		}
 	}
 	
+	public void clearCurrentMessage() {
+		currentMessage = "";
+	}
+	
+	public String getCurrentMessage() {
+		return currentMessage;
+	}
+	
 	public void sendMessage(String message) {
 		pw.println(message);
 	}
@@ -44,6 +56,15 @@ public class MessageSender {
 	
 	public String getMessage() {
 		return in.nextLine();
+	}
+
+	@Override
+	public void run() {
+		while(true) {
+			if(hasMessage()) {
+				currentMessage = getMessage();
+			}
+		}
 	}
 	
 }
