@@ -11,8 +11,8 @@ public class View {
 	private GameScene gameScene;
 	
 	public View() {
-		homeScene = new HomeScene(new BorderPane(), 600, 400, "#94b4cc");
-		gameScene = new GameScene(new BorderPane(), 600, 400, "#94b4cc");
+		homeScene = new HomeScene(new BorderPane(), 800, 600, "#94b4cc");
+		gameScene = new GameScene(new BorderPane(), 800, 600, "#94b4cc");
 	}
 	
 	public void setStage(Stage s) {
