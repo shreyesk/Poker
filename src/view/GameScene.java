@@ -76,6 +76,21 @@ public class GameScene extends Scene {
 		bp.setCenter(allCards);
 		bp.setBottom(options);
 	}
+	
+	public void updateScreen(String cardsTogether) {
+		String[] cards = cardsTogether.split("-");
+		if(cards.length == 2) {
+			this.cards[0].setText(cards[0]);
+			this.cards[1].setText(cards[1]);
+			for(int i = 0; i < fieldCards.length; i++) {
+				fieldCards[i].setText("");
+			}
+		} else if(cards.length > 2){
+			for(int i = 0; i < cards.length - 2; i++) {
+				fieldCards[i].setText(cards[i]);
+			}
+		}
+	}
 
 	public BorderPane getBp() {
 		return bp;

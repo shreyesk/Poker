@@ -71,6 +71,14 @@ public class Game {
 		return this.field.toString();
 	}
 	
+	public String toString() {
+		String s = getField();
+		for(int i = 0; i < hands.length; i++) {
+			s += getHand(i);
+		}
+		return s;
+	}
+	
 	public enum Turn {
 		DEAL, FIRST, SECOND, THIRD, RESET;
 	}

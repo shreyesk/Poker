@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import game.Game;
+import game.Game.Turn;
 
 public class Server implements Runnable {
 
@@ -94,17 +95,30 @@ public class Server implements Runnable {
 		}
 		s.stopThread();
 		s.createGame(s.size());
-		while(!s.ready()) {
-			System.out.println("All players are not ready.");
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		int i = 0;
+		while(true) {
+			while(!s.ready()) {
+				System.out.println("All players are not ready.");
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			System.out.println("All players ready.");
+			for(ClientThread c : s.getClientThreads()) {
+				c.clearCurrentMessage();
+			}
+			s.getGame().dealTurn(Turn.values()[i % Turn.values().length]);
+			i++;
+			String field = s.getGame().getField();
+			for(int j = 0; j < s.size(); j++) {
+				String hand = s.getGame().getHand(j);
+				String toSend = field + hand;
+				toSend = toSend.replace("\n", "-");
+				s.getClientThreads().get(j).sendMessage(toSend);
 			}
 		}
-		System.out.println("All players ready.");
-		scan.close();
-		System.out.println();
 	}
 
 }
