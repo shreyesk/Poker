@@ -12,14 +12,14 @@ public class Card {
 	
 	@Override
 	public String toString() {
-		return v.toString() + " of " + s.toString();
+		return v.toString().substring(v.toString().length() - 1) + s.toString();
 	}
 	
 	public enum Suit {
-		SPADES, HEARTS, CLUBS, DIAMONDS
+		S, H, C, D
 	}
 	
 	public enum Value {
-		ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING
+		ACEA, TWO2, THREE3, FOUR4, FIVE5, SIX6, SEVEN7, EIGHT8, NINE9, TENT, JACKJ, QUEENQ, KINGK
 	}
 }

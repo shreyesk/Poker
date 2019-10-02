@@ -4,6 +4,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -13,9 +15,9 @@ public class GameScene extends Scene {
 	
 	private BorderPane bp;
 	
-	private Text[] fieldCards;
+	private ImageView[] fieldCards;
 	
-	private Text[] cards;
+	private ImageView[] cards;
 	
 	private Button check;
 	private Button call;
@@ -28,13 +30,18 @@ public class GameScene extends Scene {
 		this.bp = bp;
 		bp.setStyle("-fx-background-color: '" + color + "';");
 		
-		fieldCards = new Text[5];
+		fieldCards = new ImageView[5];
 		for(int i = 0; i < fieldCards.length; i++) {
-			fieldCards[i] = new Text("Field Card " + i);
+			fieldCards[i] = new ImageView();
+			fieldCards[i].setFitWidth(120);
+			fieldCards[i].setPreserveRatio(true);
 		}
-		cards = new Text[2];
+		cards = new ImageView[2];
 		for(int i = 0; i < cards.length; i++) {
-			cards[i] = new Text("Hand Card " + i);
+			cards[i] = new ImageView();
+			cards[i] = new ImageView();
+			cards[i].setFitWidth(120);
+			cards[i].setPreserveRatio(true);
 		}
 		
 		check = new Button("Check");
@@ -54,11 +61,11 @@ public class GameScene extends Scene {
 		hand.setAlignment(Pos.CENTER);
 		hand.setSpacing(20);
 		
-		for(Text t : cards) {
-			hand.getChildren().add(t);
+		for(ImageView iv : cards) {
+			hand.getChildren().add(iv);
 		}
-		for(Text t : fieldCards) {
-			field.getChildren().add(t);
+		for(ImageView iv : fieldCards) {
+			field.getChildren().add(iv);
 		}
 		allCards.getChildren().add(hand);
 		allCards.getChildren().add(field);
@@ -80,14 +87,14 @@ public class GameScene extends Scene {
 	public void updateScreen(String cardsTogether) {
 		String[] cards = cardsTogether.split("-");
 		if(cards.length == 2) {
-			this.cards[0].setText(cards[0]);
-			this.cards[1].setText(cards[1]);
+			this.cards[0].setImage(new Image("file:images/" + cards[0] + ".png"));
+			this.cards[1].setImage(new Image("file:images/" + cards[1] + ".png"));
 			for(int i = 0; i < fieldCards.length; i++) {
-				fieldCards[i].setText("");
+				fieldCards[i].setImage(new Image("file:images/blank.png"));;
 			}
 		} else if(cards.length > 2){
 			for(int i = 0; i < cards.length - 2; i++) {
-				fieldCards[i].setText(cards[i]);
+				fieldCards[i].setImage(new Image("file:images/" + cards[i] + ".png"));
 			}
 		}
 	}
@@ -110,14 +117,6 @@ public class GameScene extends Scene {
 
 	public Button getFold() {
 		return fold;
-	}
-
-	public void setFieldCards(Text[] fieldCards) {
-		this.fieldCards = fieldCards;
-	}
-
-	public void setCards(Text[] cards) {
-		this.cards = cards;
 	}
 	
 }

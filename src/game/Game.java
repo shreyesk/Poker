@@ -7,6 +7,8 @@ public class Game {
 	private CardCollection field;
 	private CardCollection[] hands;
 	
+	private int[] bets;
+	
 	private int size;
 	
 	public Game(int numOfPlayers) {
