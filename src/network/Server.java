@@ -97,11 +97,9 @@ public class Server implements Runnable {
 		s.createGame(s.size());
 		int turnNumber = 0;
 		int clientConnectionNumber = 0;
+		int clientToCheck = 0;
 		while(true) {
-			int clientToCheck = clientConnectionNumber % s.size();
-//			while(s.getClientThreads().get(s.size() - 1).getCurrentMessage().equals("")) {
-//				System.out.println("Player " + clientToCheck + " still setting field.");
-//			}
+			clientToCheck = clientConnectionNumber % s.size();
 			while(!s.ready()) {
 				s.getClientThreads().get(clientToCheck).sendMessage("enable");
 				while(!s.getClientThreads().get(clientToCheck).getCurrentMessage().equals("ready")) {
@@ -112,20 +110,27 @@ public class Server implements Runnable {
 						e.printStackTrace();
 					}
 				}
-				//s.getClientThreads().get(clientConnectionNumber).disableInteraction();
+				s.getClientThreads().get(clientToCheck).sendMessage("disable");
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				clientConnectionNumber++;
 				clientToCheck = clientConnectionNumber % s.size();
-//				System.out.println("All players are not ready.");
-//				try {
-//					Thread.sleep(1000);
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
 			}
+			
+			//makes it so a new player starts every round
+			if(turnNumber % Turn.values().length == Turn.values().length - 1) {
+				clientConnectionNumber++;
+			}
+			
 			System.out.println("All players ready.");
 			for(ClientThread c : s.getClientThreads()) {
 				c.clearCurrentMessage();
 			}
+			
+			//deals a turn to the game
 			s.getGame().dealTurn(Turn.values()[turnNumber % Turn.values().length]);
 			turnNumber++;
 			String field = s.getGame().getField();
@@ -135,8 +140,10 @@ public class Server implements Runnable {
 				toSend = toSend.replace("\n", "-");
 				s.getClientThreads().get(j).sendMessage(toSend);
 			}
+			
+			//allows all clients to set up fields reset messages
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

@@ -68,11 +68,14 @@ public class App extends Application implements Runnable {
 			if(c.getCurrentMessage().equals("enable")) {
 				v.getGameScene().enable();
 				c.clearCurrentMessage();
+			} else if(c.getCurrentMessage().equals("disable")) {
+				v.getGameScene().disable();
+				c.clearCurrentMessage();
 			} else if(!c.getCurrentMessage().equals("")) {
 				v.getGameScene().updateScreen(c.getCurrentMessage());
 				c.clearCurrentMessage();
 			} else {
-				System.out.println("No new cards received.");
+				System.out.println("No new input received.");
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
