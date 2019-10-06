@@ -65,7 +65,10 @@ public class App extends Application implements Runnable {
 	@Override
 	public void run() {
 		while(true) {
-			if(!c.getCurrentMessage().equals("")) {
+			if(c.getCurrentMessage().equals("enable")) {
+				v.getGameScene().enable();
+				c.clearCurrentMessage();
+			} else if(!c.getCurrentMessage().equals("")) {
 				v.getGameScene().updateScreen(c.getCurrentMessage());
 				c.clearCurrentMessage();
 			} else {

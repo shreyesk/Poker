@@ -49,6 +49,8 @@ public class GameScene extends Scene {
 		bet = new Button("Bet");
 		fold = new Button("Fold");
 		
+		disable();
+		
 		VBox allCards = new VBox();
 		allCards.setAlignment(Pos.CENTER);
 		allCards.setSpacing(50);
@@ -82,6 +84,20 @@ public class GameScene extends Scene {
 		
 		bp.setCenter(allCards);
 		bp.setBottom(options);
+	}
+	
+	public void disable() {
+		check.setDisable(true);
+		call.setDisable(true);
+		bet.setDisable(true);
+		fold.setDisable(true);
+	}
+	
+	public void enable() {
+		check.setDisable(false);
+		call.setDisable(false);
+		bet.setDisable(false);
+		fold.setDisable(false);
 	}
 	
 	public void updateScreen(String cardsTogether) {

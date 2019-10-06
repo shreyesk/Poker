@@ -20,6 +20,10 @@ public class Game {
 		for(int i = 0; i < size; i++) {
 			hands[i] = new CardCollection();
 		}
+		bets = new int[size];
+		for(int i = 0; i < size; i++) {
+			bets[i] = 0;
+		}
 	}
 	
 	private void dealHands() {
@@ -43,12 +47,18 @@ public class Game {
 	}
 	
 	private void reset() {
+		//add cards back to deck and shuffle
 		d.addCards(trash.empty());
 		d.addCards(field.empty());
 		for(int i = 0; i < size; i++) {
 			d.addCards(hands[i].empty());
 		}
 		d.shuffle();
+		
+		//reset all bets to 0
+		for(int i = 0; i < size; i++) {
+			bets[i] = 0;
+		}
 	}
 	
 	public void dealTurn(Turn t) {
@@ -63,6 +73,10 @@ public class Game {
 		} else {
 			reset();
 		}
+	}
+	
+	public void placeBet(int handNumber, int bet) {
+		bets[handNumber] = bets[handNumber] + bet;
 	}
 	
 	public String getHand(int handNumber) {
